@@ -1,0 +1,88 @@
+<aura:component  implements="force:appHostable,flexipage:availableForAllPageTypes,force:hasRecordId,forceCommunity:availableForAllPageTypes" access="global" controller="FilesUploadController">
+
+	<aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+	<aura:attribute name="files" type="ContentDocument[]"/>
+	<aura:attribute name="recordId" type="string"/>
+	<aura:attribute name="accept" type="List" default="['.jpg', '.jpeg','.pdf','.csv','.xlsx']"/>
+	<aura:attribute name="multiple" type="Boolean" default="false"/>
+	<aura:attribute name="disabled" type="Boolean" default="false"/>
+	<aura:attribute name="progress" type="Integer" default="0"/>
+	<aura:attribute name="submitProgress" type="Integer" default="0"/>
+	<aura:attribute name="lockSubmit" type="Boolean" default="false"/>
+	<aura:attribute name="hideSubmitButton" type="Boolean"/>
+
+	<aura:attribute name="documents" type="object[]"/>
+ 
+	<aura:handler name="change" value="{!v.progress}" action="{!c.HupdateContact}" />
+
+	<lightning:card iconName="standard:file" title="Pièces justificatives">
+		<aura:set attribute="title" >
+			<div style="width:80%;">
+				{!$Label.c.CMT_Upl_Documents} : {!v.progress}%
+				<lightning:progressBar value="{!v.progress}" size="large" />
+			</div>
+		</aura:set>
+		<aura:set attribute="actions">
+			<aura:if isTrue="{!v.hideSubmitButton}">
+				<lightning:button label="{!$Label.c.CMT_Upl_Submit}" disabled="false" onclick="{! c.handleSubmit }"/>
+			</aura:if>
+		</aura:set>
+
+		<div class="slds-p-horizontal_medium">
+			<lightning:accordion aura:id="accordion"  >
+				<!-- activeSectionName="B" -->
+				<aura:iteration items="{!v.documents}" var="document" indexVar="indx">
+					<lightning:accordionSection name="{!document.uniqName}" label="{!document.label}">
+						<aura:set attribute="body">
+							<div class="slds-grid">
+								<aura:if isTrue="{!or(document.uniqName == 'Diplome',document.uniqName == 'Autres')}">
+									<div class="slds-col slds-size--5-of-12">
+										<lightning:input type="text" name="input1" label="{!$Label.c.CMT_Upl_EnterFileName}" aura:id="fileName2" />
+									</div>&nbsp; &nbsp;
+								</aura:if>
+
+								<div class="slds-col slds-size---of-12">
+									<lightning:fileUpload
+											label="{!$Label.c.CMT_Upl_AddFile}"
+											multiple="{!v.multiple}"
+											accept="{!v.accept}"
+											recordId="{!v.recordId}"
+											name="fileUploader"
+											onuploadfinished="{!c.handleUploadFinished}"
+											disabled="false" />
+								</div>
+							</div>
+							<br/>
+							<table class="slds-table slds-table--bordered">
+								<thead>
+								<tr>
+									<th>{!$Label.c.CMT_Upl_FileTitle}</th>
+									<th>Type</th>
+									<th></th>
+								</tr>
+								</thead>
+								<tbody>
+								<aura:iteration items="{!v.files}" var="f">
+									<aura:if isTrue="{!f.Description == document.uniqName}">
+										<tr>
+											<td> <a href="{!'/sfc/servlet.shepherd/document/download/'+f.Id}" id="{!f.Id}" target="_blank" download="{!f.Title}" >{!f.Title}</a></td>
+											<td>{!f.FileType}</td>
+											<td><lightning:buttonIcon iconName="utility:delete" variant="bare" onclick="{!c.removeLine}" alternativeText="Delete." type="button" value="{!f.Id}"/></td>
+										</tr>
+									</aura:if>
+								</aura:iteration>
+								</tbody>
+							</table>
+						</aura:set>
+					</lightning:accordionSection>
+				</aura:iteration>
+
+			</lightning:accordion>
+
+
+		</div>
+	</lightning:card>
+
+
+</aura:component>
