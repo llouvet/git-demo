@@ -17,21 +17,23 @@ export default class FileImport extends LightningElement {
         })
         readRecords({fileIDs: fileIDs, objectApiName: 'Account'})
         .then(result => {
-            this.dispatchEvent(new CloseActionScreenEvent());
-            const event = new ShowToastEvent();
-            if(result.success = 'true'){
-                event.title = 'Success';
-                event.message = result.message;
-                event.variant = 'success';
+            console.log(result);
+            if(result.success == 'true'){
+                this.dispatchEvent(new ShowToastEvent({
+                    'title': 'Success',
+                    'message': result.message,
+                    'variant': 'success'
+                }));
             }
             else{
-                event.title = 'There was a problem...';
-                event.message = result.message;
-                event.variant = 'warning';
+                this.dispatchEvent(new ShowToastEvent({
+                    'title': 'There was a problem...',
+                    'message': result.message,
+                    'variant': 'warning'
+                }));
             }
-            this.dispatchEvent;
-            //alert("No. of records uploaded : " + result);
+            this.dispatchEvent(new CloseActionScreenEvent());
         })
-        console.log(uploadedFiles);
+        console.log(fileIDs);
     }
 }

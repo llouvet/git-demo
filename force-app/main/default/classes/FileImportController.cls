@@ -4,7 +4,11 @@ public with sharing class FileImportController {
     public static Map<String,String> readRecords(List<Object> fileIDs, String objectApiName){
         try {
             //params too?
-            List<String> ids = (List<String>)fileIDs;
+            System.debug(fileIDs);
+            List<String> ids = new List<String>();
+            for(Object fileID: fileIDs){
+                ids.add((String)fileID);
+            }
             Map<String, String> columns = new Map<String, String>{'COL1'=>'Name','COL2'=>'Type','COL3'=>'Phone'};
             Map<String,String> result = new Map<String,String>();
 
