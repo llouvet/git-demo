@@ -1,0 +1,16 @@
+<template>
+    <lightning-quick-action-panel header="Import de fichiers">
+        <lightning-file-upload
+            label="Ajouter un fichier"
+            name="fileUploader"
+            accept={acceptedFormats}
+            onuploadfinished={handleUploadFinished}
+            multiple>
+        </lightning-file-upload>
+        <div slot="footer">
+            <lightning-button variant="neutral" label="Cancel"></lightning-button>
+            <lightning-button variant="brand" label="Save" class="slds-m-left_x-small"></lightning-button>
+        </div>
+    </lightning-quick-action-panel>
+</template>
+  
