@@ -24,32 +24,28 @@ public with sharing class FileImportController {
                 String content = fileData.VersionData.toString();
                 List<String> lines = content.split('\n');
                 List<String> cols = lines[0].trim().split(',');
-                if(cols.size()>columns.size()){
-                    result.put('success','false');
-                    result.put('message','The number of columns doesn\'t match.');
-                    //todo
-                    return result;
-                }
                 lines.remove(0);
                 for(String line: lines){
                     line = line.trim();
                     List<String> values = line.split(',');
                     SObject obj = Schema.getGlobalDescribe().get(objectApiName).newSObject();
+                    Integer columnsMatched = 0;
                     for(Integer i=0; i<values.size();i++){
                         if(columns.get(cols[i])!=null){
                             obj.put(columns.get(cols[i]), values[i]);
+                            columnsMatched++;
                         }
-                        else{
-                            result.put('success','false');
-                            result.put('message','The column "'+cols[i]+'" doesn\'t exist.');
-                            return result;
-                        }
+                    }
+                    if(columnsMatched<columns.size()){
+                        result.put('success','false');
+                        result.put('message','Les colonnes nécessaires à la création des enregistrements n\'ont pas été trouvées.');
+                        return result;
                     }
                     recordsUploaded.add(obj);
                 }    
             }
             result.put('success','true');
-            result.put('message',recordsUploaded.size()+' records were uploaded.');
+            result.put('message',recordsUploaded.size()+' enregistrements ont été trouvés.');
             result.put('records',JSON.serialize(recordsUploaded));
             return result;
         } catch (Exception e) {
