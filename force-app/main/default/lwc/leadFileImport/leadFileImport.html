@@ -1,0 +1,12 @@
+<template>
+    <lightning-quick-action-panel header="Import de fichiers">
+        <c-file-import
+            obj-api-name={objApiName}
+            columns-map={columnsMap}
+            onclose={closeQuickAction}>
+        </c-file-import>
+        <div slot="footer">
+            <lightning-button variant="neutral" label="Cancel"></lightning-button>
+        </div>
+    </lightning-quick-action-panel>
+</template>

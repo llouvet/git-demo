@@ -1,8 +1,11 @@
-import { LightningElement } from 'lwc';
+import { LightningElement, api } from 'lwc';
 import readRecords from '@salesforce/apex/FileImportController.readRecords';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class FileImport extends LightningElement {
+
+    @api objApiName;
+    @api columnsMap;
 
     get acceptedFormats() {
         return ['.csv'];
@@ -11,13 +14,14 @@ export default class FileImport extends LightningElement {
     handleUploadFinished(event) {
         // Get the list of uploaded files
         const uploadedFiles = event.detail.files;
+        console.log(this.objApiName)
         var fileIDs = [];
         uploadedFiles.forEach(file => {
             fileIDs.push(file.documentId);
         })
-        readRecords({fileIDs: fileIDs, objectApiName: 'Account'})
+        var obj = (this.objApiName)?this.objApiName:'Account';
+        readRecords({fileIDs: fileIDs, objectApiName: this.objApiName, columnsMap: this.columnsMap})
         .then(result => {
-            console.log(result);
             if(result.success == 'true'){
                 this.dispatchEvent(new ShowToastEvent({
                     'title': 'Success',
@@ -32,6 +36,9 @@ export default class FileImport extends LightningElement {
                     'variant': 'warning'
                 }));
             }
+            this.dispatchEvent(new CustomEvent('close', {
+                detail: result.records
+            }));
             this.dispatchEvent(new CloseActionScreenEvent());
         })
         console.log(fileIDs);
