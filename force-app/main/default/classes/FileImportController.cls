@@ -1,15 +1,21 @@
 public with sharing class FileImportController {
 
     @AuraEnabled(cacheable=true)
-    public static Map<String,String> readRecords(List<Object> fileIDs, String objectApiName){
+    public static Map<String,String> readRecords(List<Object> fileIDs, String objectApiName, Object columnsMap){
         try {
-            //params too?
-            System.debug(fileIDs);
             List<String> ids = new List<String>();
             for(Object fileID: fileIDs){
                 ids.add((String)fileID);
             }
-            Map<String, String> columns = new Map<String, String>{'COL1'=>'Name','COL2'=>'Type','COL3'=>'Phone'};
+            Map<String,String> columns = new Map<String,String>();
+
+            Map<Object,Object> colMap = (Map<Object,Object>)columnsMap;
+            for(Object column: colMap.keySet()){
+                String key = (String)column;
+                String value = (String)colMap.get(column);
+                columns.put(key,value);
+            }
+
             Map<String,String> result = new Map<String,String>();
 
             List<ContentVersion> files = [SELECT VersionData FROM ContentVersion WHERE ContentDocumentID IN :ids];
@@ -21,6 +27,7 @@ public with sharing class FileImportController {
                 if(cols.size()>columns.size()){
                     result.put('success','false');
                     result.put('message','The number of columns doesn\'t match.');
+                    //todo
                     return result;
                 }
                 lines.remove(0);
@@ -34,16 +41,16 @@ public with sharing class FileImportController {
                         }
                         else{
                             result.put('success','false');
-                            result.put('message','The column '+cols[i]+' doesn\'t match on anything.');
+                            result.put('message','The column "'+cols[i]+'" doesn\'t exist.');
                             return result;
                         }
                     }
                     recordsUploaded.add(obj);
-                    System.debug(obj);
                 }    
             }
             result.put('success','true');
-            result.put('message',String.valueOf(recordsUploaded.size())+' records were uploaded');
+            result.put('message',recordsUploaded.size()+' records were uploaded.');
+            result.put('records',JSON.serialize(recordsUploaded));
             return result;
         } catch (Exception e) {
             System.debug(e.getMessage());
