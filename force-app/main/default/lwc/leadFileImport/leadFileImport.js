@@ -9,7 +9,7 @@ export default class LeadFileImport extends LightningElement {
         'COL3':'Phone'
     };
 
-    closeQuickAction(event){
+    handleReading(event){
         var detail = event.detail;
         var obj = JSON.parse(detail);
         console.log(obj);

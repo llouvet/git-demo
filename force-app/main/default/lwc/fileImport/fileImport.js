@@ -1,6 +1,6 @@
 import { LightningElement, api } from 'lwc';
 import readRecords from '@salesforce/apex/FileImportController.readRecords';
-import { CloseActionScreenEvent } from 'lightning/actions';
+import deleteRecords from '@salesforce/apex/FileImportController.deleteRecords';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 export default class FileImport extends LightningElement {
 
@@ -19,28 +19,26 @@ export default class FileImport extends LightningElement {
         uploadedFiles.forEach(file => {
             fileIDs.push(file.documentId);
         })
-        var obj = (this.objApiName)?this.objApiName:'Account';
         readRecords({fileIDs: fileIDs, objectApiName: this.objApiName, columnsMap: this.columnsMap})
         .then(result => {
             if(result.success == 'true'){
                 this.dispatchEvent(new ShowToastEvent({
-                    'title': 'Success',
+                    'title': result.title,
                     'message': result.message,
                     'variant': 'success'
                 }));
             }
             else{
                 this.dispatchEvent(new ShowToastEvent({
-                    'title': 'There was a problem...',
+                    'title': result.title,
                     'message': result.message,
                     'variant': 'warning'
                 }));
+                deleteRecords({recordIds: fileIDs});
             }
-            this.dispatchEvent(new CustomEvent('close', {
+            this.dispatchEvent(new CustomEvent('finished', {
                 detail: result.records
             }));
-            this.dispatchEvent(new CloseActionScreenEvent());
         })
-        console.log(fileIDs);
     }
 }
