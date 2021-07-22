@@ -41,9 +41,7 @@ public with sharing class FileImportController {
                         result.put('title','Il y a un problème...');
                         result.put('message','Les colonnes nécessaires à la création des enregistrements n\'ont pas été trouvées.');
                         break;
-                        break;
                     }
-                    System.debug('3 records so 3 lines ?');
                     recordsUploaded.add(obj);
                 }    
             }
