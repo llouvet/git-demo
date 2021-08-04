@@ -1,10 +1,11 @@
 <template>
-        <lightning-file-upload
-            label="Ajouter un fichier"
-            name="fileUploader"
-            accept={acceptedFormats}
-            onuploadfinished={handleUploadFinished}
-            multiple>
-        </lightning-file-upload>
+  <lightning-file-upload
+    label="Ajouter un fichier"
+    name="fileUploader"
+    accept={acceptedFormats}
+    onuploadfinished={handleUploadFinished}
+    disabled={isDisabled}
+    multiple
+  >
+  </lightning-file-upload>
 </template>
-  

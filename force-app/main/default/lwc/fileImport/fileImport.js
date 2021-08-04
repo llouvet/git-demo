@@ -5,6 +5,7 @@ import { ShowToastEvent } from "lightning/platformShowToastEvent";
 export default class FileImport extends LightningElement {
   @api objApiName;
   @api columnsMap;
+  @api isDisabled;
 
   get acceptedFormats() {
     return [".csv"];

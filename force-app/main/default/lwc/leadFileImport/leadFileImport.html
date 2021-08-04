@@ -1,12 +1,25 @@
 <template>
-    <lightning-quick-action-panel header="Import de fichiers">
-        <c-file-import
-            obj-api-name={objApiName}
-            columns-map={columnsMap}
-            onfinished={handleReading}>
-        </c-file-import>
-        <div slot="footer">
-            <lightning-button variant="neutral" label="Cancel"></lightning-button>
-        </div>
-    </lightning-quick-action-panel>
+  <lightning-quick-action-panel header="Import de fichiers">
+    <lightning-combobox
+      name="leg"
+      label="Bras"
+      value=""
+      placeholder="Sélectionner un bras"
+      options={options}
+      onchange={handleChange}
+      required
+    >
+    </lightning-combobox>
+    <c-file-import
+      obj-api-name={objApiName}
+      columns-map={columnsMap}
+      is-disabled={isDisabled}
+      onfinished={handleReading}
+    >
+    </c-file-import>
+    <div style="height: 250px"></div>
+    <div slot="footer">
+      <lightning-button variant="neutral" label="Cancel"></lightning-button>
+    </div>
+  </lightning-quick-action-panel>
 </template>
