@@ -23,11 +23,19 @@ public with sharing class FileImportController {
             for(Contentversion fileData: files){
                 String content = fileData.VersionData.toString();
                 List<String> lines = content.split('\n');
-                List<String> cols = lines[0].trim().split(',');
+                String separator = (lines[0].contains(';'))?';':',';
+                separator = (lines[0].contains('"'))?'"'+separator+'"':separator;
+
+                lines[0] = (lines[0].left(1)=='"')?lines[0].right(lines[0].length()-1):lines[0];
+                lines[0] = (lines[0].right(1)=='"')?lines[0].left(lines[0].length()-1):lines[0];
+                List<String> cols = lines[0].trim().split(separator);
+
                 lines.remove(0);
                 for(String line: lines){
                     line = line.trim();
-                    List<String> values = line.split(',');
+                    line = (line.left(1)=='"')?line.right(line.length()-1):line;
+                    line = (line.right(1)=='"')?line.left(line.length()-1):line;
+                    List<String> values = line.trim().split(separator);
                     SObject obj = Schema.getGlobalDescribe().get(objectApiName).newSObject(); 
                     Integer columnsMatched = 0;
                     for(Integer i=0; i<values.size();i++){
