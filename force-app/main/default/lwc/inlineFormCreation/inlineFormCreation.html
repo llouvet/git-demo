@@ -1,0 +1,67 @@
+<!-- sldsValidatorIgnore -->
+<template>
+  <p class="slds-hide">{recordId}</p>
+  <lightning-quick-action-panel header="Ajouter des Actes Réalisables">
+    <template for:each={itemList} for:item="item" for:index="index">
+      <lightning-record-edit-form key={item.id} object-api-name={objApiName}>
+        <lightning-messages> </lightning-messages>
+        <lightning-layout multiple-rows>
+          <template for:each={fields} for:item="field">
+            <lightning-layout-item
+              key={field.name}
+              size="12"
+              small-device-size="6"
+              medium-device-size="4"
+              large-device-size="2"
+            >
+              <lightning-input-field
+                field-name={field.name}
+                variant="label-stacked"
+                value={field.value}
+              ></lightning-input-field>
+            </lightning-layout-item>
+          </template>
+          <lightning-layout-item
+            size="12"
+            small-device-size="6"
+            medium-device-size="4"
+            large-device-size="2"
+            padding="around-small"
+          >
+            <div class="slds-var-p-top_medium">
+              <lightning-icon
+                icon-name="utility:add"
+                access-key={item.id}
+                id={index}
+                alternative-text="Add Row"
+                size="small"
+                title="Add Row"
+                onclick={addRow}
+              >
+              </lightning-icon>
+              <lightning-icon
+                icon-name="utility:delete"
+                access-key={item.id}
+                id={index}
+                alternative-text="Delete Row"
+                size="small"
+                title="Delete Row"
+                onclick={removeRow}
+              >
+              </lightning-icon>
+            </div>
+          </lightning-layout-item>
+        </lightning-layout>
+      </lightning-record-edit-form>
+    </template>
+    <div slot="footer">
+      <lightning-button
+        variant="brand"
+        onclick={handleSubmit}
+        name="submit"
+        label="Submit"
+      >
+      </lightning-button>
+    </div>
+  </lightning-quick-action-panel>
+</template>
