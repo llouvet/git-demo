@@ -1,3 +1,7 @@
+/**
+ * @description Test Class for FileImportController
+ * @author Lucille Louvet
+ */
 @isTest
 public with sharing class FileImportController_TEST {
 
