@@ -1,0 +1,94 @@
+<template>
+    <lightning-card title="Build your Query below">
+        <div class="slds-var-p-horizontal_x-small">
+            <lightning-combobox 
+            style="font-weight: bold;"
+            name="object"
+            label="Object"
+            value={objValue}
+            placeholder="Select an Object"
+            options={objOptions}
+            onchange={saveObject}></lightning-combobox>
+            <template if:true={objIsSelected}>
+                <lightning-dual-listbox
+                name="fields"
+                label="Fields"
+                value={fieldValues}
+                source-label="Available"
+                selected-label="Selected"
+                options={fieldOptions}
+                required-options={requiredFields}
+                min="1"
+                disabled={isFieldsDisabled}
+                onchange={saveFields}></lightning-dual-listbox>
+            </template>
+            <template if:true={objIsSelected}>
+                <lightning-layout vertical-align="end" horizontal-align="spread">
+                    <lightning-layout-item class="slds-var-p-right_xxx-small slds-col slds-size_3-of-12" flexibility="auto">
+                        <lightning-combobox
+                        name="filterField"
+                        label="Field to filter on"
+                        value={filterFieldValue}
+                        placeholder="Select a Field"
+                        options={fieldOptions}
+                        onchange={displayOperators}></lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-var-p-horizontal_xxx-small slds-col slds-size_3-of-12" flexibility="auto">
+                        <lightning-combobox
+                        name="filterOperator"
+                        label="Operator"
+                        value={filterOperatorValue}
+                        placeholder="Select an Operator"
+                        options={operatorOptions}
+                        onchange={setOperator}></lightning-combobox>
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-var-p-horizontal_xxx-small slds-col slds-size_5-of-12" flexibility="auto">
+                        <template if:false={isFilterFieldPicklist}>
+                            <lightning-input
+                            type={inputType}
+                            name="filterInput"
+                            value={filterInputValue}
+                            label="Value"
+                            placeholder="Enter a value"
+                            onchange={isAllFieldsFilled}></lightning-input>
+                        </template>
+                        <template if:true={isFilterFieldPicklist}>
+                            <lightning-combobox
+                            name="filterValue"
+                            label="Value"
+                            value={filterInputValue}
+                            placeholder="Select a Value"
+                            options={filterFieldOptions}
+                            onchange={isAllFieldsFilled}></lightning-combobox>
+                        </template>
+
+                    </lightning-layout-item>
+                    <lightning-layout-item class="slds-var-p-left_xxx-small slds-col slds-size_1-of-12" flexibility="auto">
+                        <template if:false={notAllFieldsFilled}>
+                            <lightning-icon size="small" icon-name="utility:add" title="Apply" onclick={addFilter}></lightning-icon>
+                        </template>
+                    </lightning-layout-item>
+                </lightning-layout>
+            
+                <div>
+                    <template if:true={render}>
+                        <template for:each={filters} for:item="filter">
+                            <lightning-pill key={filter.label} label={filter.label} name={filter.label} onremove={removeFilter}></lightning-pill>
+                        </template>    
+                    </template>
+                    <lightning-input type="toggle" label="Apply Custom Logic" name="customLogic" onchange={displayCustomLogicPanel}></lightning-input>
+                    <template if:true={customLogic}>
+                        <lightning-layout vertical-align="end" horizontal-align="space">
+                            <lightning-layout-item class="slds-var-p-right_xxx-small slds-col slds-size_11-of-12" flexibility="auto">
+                                <lightning-input type="text" label="Custom Logic" placeholder="1 AND (2 OR 3)" onchange={handleCustomLogic}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item class="slds-var-p-left_xxx-small slds-col slds-size_1-of-12" flexibility="auto">
+                                <lightning-icon size="small" icon-name="utility:check" title="Apply" onclick={generateFilterString}></lightning-icon>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </template>
+                </div>
+            </template>
+        </div>
+    </lightning-card>
+</template>

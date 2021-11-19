@@ -1,0 +1,11 @@
+<template>
+    <lightning-card title={title}>
+        <template if:true={readyToRender}>
+            <lightning-datatable
+            key-field="Id"
+            data={data}
+            columns={columns}
+            hide-checkbox-column></lightning-datatable>
+        </template>
+    </lightning-card>
+</template>
